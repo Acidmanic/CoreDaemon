@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using CoreDaemon.Models;
 
@@ -14,6 +15,8 @@ namespace CoreDaemon.Playground
             
             Console.WriteLine(Assembly.GetEntryAssembly()?.CodeBase);
             
+            Console.WriteLine(Process.GetCurrentProcess().MainModule?.FileName);
+            
             Console.WriteLine(Assembly.GetEntryAssembly()?.FullName);
             
             Console.WriteLine(Assembly.GetEntryAssembly()?.EntryPoint?.Name);
@@ -28,7 +31,9 @@ namespace CoreDaemon.Playground
             
             Console.WriteLine("ServiceName: " + info.ServiceName);
 
-            Damien.Summon().ExecuteCommands(new string[] {"daemon", "install"});
+            Console.WriteLine("-----------------------------------------------");
+
+            Damien.Summon().ExecuteCommands(args);
         }
     }
 }

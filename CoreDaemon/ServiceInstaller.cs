@@ -28,6 +28,8 @@ namespace CoreDaemon
                     _serviceInfo.RunningInstanceName);
             
             File.WriteAllText(_serviceInfo.ScriptFileName,content);
+            
+            Process.Start("chmod", $"+x {_serviceInfo.ScriptFileName}");
 
             Process.Start("update-rc.d", $"{_serviceInfo.Name} default");
             

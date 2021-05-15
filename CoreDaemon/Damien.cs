@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using CoreDaemon.Contracts;
@@ -78,23 +79,19 @@ namespace CoreDaemon
 
             var service = _serviceProvider.ProvideServiceFor(application);
             
-            new ServiceInstaller(service).InstallService();
+            new ServiceInstaller(service).TryUninstallService();
         }
 
         
         public ApplicationInfo GetApplicationInfo()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            var exeFile = Process.GetCurrentProcess().MainModule?.FileName;
 
-            if (assembly == null)
-            {
-                assembly = Assembly.GetExecutingAssembly();
-            }
             return new ApplicationInfo
             {
-                ApplicationName = new FileInfo(assembly.CodeBase).Name,
-                BinaryDirectory = new FileInfo(assembly.CodeBase).Directory?.FullName,
-                ServiceName = new FileInfo(assembly.CodeBase).Name.ToLower()
+                ApplicationName = new FileInfo(exeFile).Name,
+                BinaryDirectory = new FileInfo(exeFile).Directory?.FullName,
+                ServiceName = new FileInfo(exeFile).Name.ToLower()
             };
         }
     }

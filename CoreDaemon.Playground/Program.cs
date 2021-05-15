@@ -33,7 +33,10 @@ namespace CoreDaemon.Playground
 
             Console.WriteLine("-----------------------------------------------");
 
-            Damien.Summon().ExecuteCommands(args);
+            if (Damien.Summon().ExecuteCommands(args) == ExecutionResult.NoActionTaken)
+            {
+                // Start sync (blocking) service here 
+            }
         }
     }
 }

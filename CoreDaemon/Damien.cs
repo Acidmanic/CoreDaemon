@@ -50,12 +50,24 @@ namespace CoreDaemon
                     
                     if (command == "install")
                     {
-                        Install();
+                        try
+                        {
+                            Install();
+                        }
+                        catch (Exception ) { }
+
+                        return ExecutionResult.Handled;
                     }
 
                     if (command == "uninstall")
                     {
-                        UnInstall();
+                        try
+                        {
+                            UnInstall();
+                        }
+                        catch (Exception ) { }
+
+                        return ExecutionResult.Handled;
                     }
                 }
                 

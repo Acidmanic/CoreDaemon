@@ -2,7 +2,18 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <Authors>Mani Moayedi</Authors>
+        <Company>Acidmanic</Company>
+        <PackageIcon>graphics\damien.png</PackageIcon>
+        <Description>Adds init.d daemon installation/uninstallation to your webapps</Description>
+        <Summary>Call CoreDaemon.Damien.Summon().Execute(args) in yout program, and exit due the results.</Summary>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     </PropertyGroup>
 
-
+    <ItemGroup>
+        <!-- NuGet -->
+        <None Include="graphics\damien.png" Pack="true" PackagePath="\graphics"/>
+        <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt"/>
+    </ItemGroup>
+    
 </Project>

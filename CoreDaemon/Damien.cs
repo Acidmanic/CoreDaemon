@@ -10,7 +10,6 @@ namespace CoreDaemon
         {
         }
 
-
         public static Damien Summon()
         {
             lock (locker)

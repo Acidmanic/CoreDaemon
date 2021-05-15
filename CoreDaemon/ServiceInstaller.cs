@@ -68,7 +68,7 @@ namespace CoreDaemon
                     File.Delete(_serviceInfo.ScriptFileName);
                 }
             }
-            catch (Exception e)
+            catch (Exception )
             { }
             try
             {

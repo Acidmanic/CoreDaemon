@@ -72,14 +72,30 @@ static void Main(string[] args)
 
  } 
 ```
+
+How daemon gets installed/uninstalled
+==============
+
+
+By adding the code mentioned above, to your application entry, when your applicatin gets started by CoreDaemon commands, It will handle the commands
+ and will install or uninstall a service (on linux's init.d). CoreDaemon commands are: 
+
+ * daemon install
+ * daemon uninstall
+ * daemon help
+
+For example if your application name is Example, after it has been built, you would call 
+
+```bash
+	sudo ./Example daemon install
+```
+
 Limitations
 ============
 
  * For now, the library only woks on Linux, and only linux distributions supporting init.d daemons.
  * The code has been tested on Ubuntu
  * Since CoreDaemon writes on System files, calling your application with daemon commands must be elevated. (use sudo or call by root user)
-
-
 
 
 Regards;

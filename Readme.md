@@ -1,4 +1,6 @@
 
+![icon](CoreDaemon/graphics/damien.png)
+
 About
 ==============
 

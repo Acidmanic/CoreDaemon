@@ -14,7 +14,7 @@ namespace CoreDaemon.ServiceInfoProviders
                 RunningInstanceName = applicationInfo.ApplicationName,
                 KillAllInstancesCommand = $"killall -9 {applicationInfo.ApplicationName}",
                 RunInBackgroundCommand = $"(cd {applicationInfo.BinaryDirectory} && (./{applicationInfo.ApplicationName} &))",
-                ScriptFileName = Path.Combine(new DirectoryInfo(".").Root.Name,"etc","init.d",applicationInfo.ServiceName)
+                Application = applicationInfo
             };
         }
     }

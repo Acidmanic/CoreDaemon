@@ -9,6 +9,7 @@ namespace CoreDaemon.Models
         
         public string RunningInstanceName { get; set; }
         
-        public string ScriptFileName { get; set; }
+        public ApplicationInfo Application { get; set; }
+        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using CoreDaemon.Models;
 
 namespace CoreDaemon.Playground
@@ -35,7 +36,12 @@ namespace CoreDaemon.Playground
 
             if (Damien.Summon().ExecuteCommands(args) == ExecutionResult.NoActionTaken)
             {
-                // Start sync (blocking) service here 
+                // Start sync (blocking) service here
+
+                while (true)
+                {
+                    Thread.Sleep(100);
+                }
             }
         }
     }

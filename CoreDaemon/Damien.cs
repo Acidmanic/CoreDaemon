@@ -12,6 +12,7 @@ namespace CoreDaemon
     {
         private static object locker = new object();
         private static Damien instance = null;
+
         private Damien()
         {
         }
@@ -25,11 +26,13 @@ namespace CoreDaemon
                     instance = new Damien();
                 }
             }
+
             return instance;
         }
 
         private IServiceInfoProvider _serviceProvider;
-        
+        private Func<ServiceInfo, ServiceInstallerBase> _serviceInstallerFactory;
+
         public ExecutionResult ExecuteCommands(string[] args)
         {
             if (args != null && args.Length > 1)
@@ -42,19 +45,26 @@ namespace CoreDaemon
 
                     if (command == "help")
                     {
-                        Console.WriteLine("help: Prints this.\ninstall: will install an init.d daemon on current system." +
-                                          "\nuninstall: will remove any installed service for this assembly from current system.");
+                        Console.WriteLine("help: Prints this.\n" +
+                                          "install: will install a daemon on current system.\n" +
+                                          "uninstall: will remove any installed service for this assembly from current system.\n\n" +
+                                          "* to writing service files into init.d directory, use init-rc argument with install and uninstall commands." +
+                                          "Otherwise a systemd/system/.service file will be created(/removed).");
                         return ExecutionResult.Handled;
                     }
+
                     _serviceProvider = new DotnetCoreWebAppServiceInfoProvider();
-                    
+                    _serviceInstallerFactory = info => CreateInstaller(args, info);
+
                     if (command == "install")
                     {
                         try
                         {
                             Install();
                         }
-                        catch (Exception ) { }
+                        catch (Exception)
+                        {
+                        }
 
                         return ExecutionResult.Handled;
                     }
@@ -65,14 +75,29 @@ namespace CoreDaemon
                         {
                             UnInstall();
                         }
-                        catch (Exception ) { }
+                        catch (Exception)
+                        {
+                        }
 
                         return ExecutionResult.Handled;
                     }
                 }
-                
             }
+
             return ExecutionResult.NoActionTaken;
+        }
+
+        private ServiceInstallerBase CreateInstaller(string[] args, ServiceInfo info)
+        {
+            foreach (var arg in args)
+            {
+                if ("init-rc".Equals(arg, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new InitRcServiceInstaller(info);
+                }
+            }
+
+            return new ServiceUnitServiceInstaller(info);
         }
 
 
@@ -81,8 +106,10 @@ namespace CoreDaemon
             var application = GetApplicationInfo();
 
             var service = _serviceProvider.ProvideServiceFor(application);
-            
-            new ServiceInstaller(service).InstallService();
+
+            var installer = _serviceInstallerFactory(service);
+
+            installer.InstallService();
         }
 
         private void UnInstall()
@@ -90,11 +117,13 @@ namespace CoreDaemon
             var application = GetApplicationInfo();
 
             var service = _serviceProvider.ProvideServiceFor(application);
-            
-            new ServiceInstaller(service).TryUninstallService();
+
+            var installer = _serviceInstallerFactory(service);
+
+            installer.TryUninstallService();
         }
 
-        
+
         public ApplicationInfo GetApplicationInfo()
         {
             var exeFile = Process.GetCurrentProcess().MainModule?.FileName;
@@ -103,7 +132,8 @@ namespace CoreDaemon
             {
                 ApplicationName = new FileInfo(exeFile).Name,
                 BinaryDirectory = new FileInfo(exeFile).Directory?.FullName,
-                ServiceName = new FileInfo(exeFile).Name.ToLower()
+                ServiceName = new FileInfo(exeFile).Name.ToLower(),
+                ExecutableFile = exeFile
             };
         }
     }

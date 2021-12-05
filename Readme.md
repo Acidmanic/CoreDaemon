@@ -73,6 +73,11 @@ static void Main(string[] args)
  } 
 ```
 
+You can specify the default way of creating/removing daemons by using ```Damien.UseInitRc()``` to create service in
+ /etc/init.d or using ```UseServiceUnitFile()``` to create service in /etc/systemd/system. This will be a default and can 
+ be overridden when using the application (Next section).
+ 
+
 How daemon gets installed/uninstalled
 ==============
 
@@ -83,17 +88,23 @@ By adding the code mentioned above, to your application entry, when your applica
  * daemon install
  * daemon uninstall
  * daemon help
-
+ 
 For example if your application name is Example, after it has been built, you would call 
 
 ```bash
 	sudo ./Example daemon install
 ```
 
+ For install scripts, cicds and etc. You can add 'init-rc' or 'unit' 
+ argument to both install and uninstall commands. These arguments will 
+ override the default installation method. __init-rc__ will install/uninstall 
+ the select-case script in /etc/init.d/service-name, and __unit__ will  
+ install/uninstall the service unit file in /etc/systemd/system/servce-name.service.
+
 Limitations
 ============
 
- * For now, the library only woks on Linux, and only linux distributions supporting init.d daemons.
+ * For now, the library only woks on Linux.
  * The code has been tested on Ubuntu
  * Since CoreDaemon writes on System files, calling your application with daemon commands must be elevated. (use sudo or call by root user)
 

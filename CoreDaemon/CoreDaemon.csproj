@@ -16,5 +16,11 @@
         <None Include="graphics\damien.png" Pack="true" PackagePath="\graphics" />
         <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\Readme.md">
+        <Link>Readme.md</Link>
+      </Content>
+    </ItemGroup>
     
 </Project>

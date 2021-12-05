@@ -13,8 +13,8 @@
 
     <ItemGroup>
         <!-- NuGet -->
-        <None Include="graphics\damien.png" Pack="true" PackagePath="\graphics"/>
-        <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt"/>
+        <None Include="graphics\damien.png" Pack="true" PackagePath="\graphics" />
+        <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
     </ItemGroup>
     
 </Project>

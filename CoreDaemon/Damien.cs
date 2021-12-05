@@ -10,24 +10,25 @@ namespace CoreDaemon
 {
     public class Damien
     {
-        private static object locker = new object();
-        private static Damien instance = null;
+        private static readonly object Locker = new object();
+        private static Damien _instance = null;
 
         private Damien()
         {
+            UseServiceUnitFile();
         }
 
         public static Damien Summon()
         {
-            lock (locker)
+            lock (Locker)
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new Damien();
+                    _instance = new Damien();
                 }
             }
 
-            return instance;
+            return _instance;
         }
 
         private IServiceInfoProvider _serviceProvider;
@@ -45,11 +46,15 @@ namespace CoreDaemon
 
                     if (command == "help")
                     {
+                        var defaultMethod = GetNameForUsingMethod();
+                        
                         Console.WriteLine("help: Prints this.\n" +
                                           "install: will install a daemon on current system.\n" +
                                           "uninstall: will remove any installed service for this assembly from current system.\n\n" +
-                                          "* to writing service files into init.d directory, use init-rc argument with install and uninstall commands." +
-                                          "Otherwise a systemd/system/.service file will be created(/removed).");
+                                          "* to writing service files into init.d directory, use 'init-rc' argument with install and uninstall commands." +
+                                          "In a same way, using the 'unit' argument will force to install/uninstall regarding ServiceUnit" +
+                                          " files (/etc/systemd/system/). If neither of these arguments are present, then the default " +
+                                          "method: ("+defaultMethod+") will be used.");
                         return ExecutionResult.Handled;
                     }
 
@@ -87,11 +92,36 @@ namespace CoreDaemon
             return ExecutionResult.NoActionTaken;
         }
 
+        private string GetNameForUsingMethod()
+        {
+            var application = GetApplicationInfo();
+
+            var service = _serviceProvider.ProvideServiceFor(application);
+
+            var installer = _serviceInstallerFactory(service);
+
+            if (installer is InitRcServiceInstaller)
+            {
+                return "Init-Rc Files";
+            }
+
+            if (installer is ServiceUnitServiceInstaller)
+            {
+                return "Service Units";
+            }
+
+            return "Default?!";
+        }
+
         private ServiceInstallerBase CreateInstaller(string[] args, ServiceInfo info)
         {
             foreach (var arg in args)
             {
                 if ("init-rc".Equals(arg, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new InitRcServiceInstaller(info);
+                }
+                if ("unit".Equals(arg, StringComparison.OrdinalIgnoreCase))
                 {
                     return new InitRcServiceInstaller(info);
                 }
@@ -135,6 +165,20 @@ namespace CoreDaemon
                 ServiceName = new FileInfo(exeFile).Name.ToLower(),
                 ExecutableFile = exeFile
             };
+        }
+
+        public Damien UseInitRc()
+        {
+            _serviceInstallerFactory = s => new InitRcServiceInstaller(s);
+
+            return this;
+        }
+
+        public Damien UseServiceUnitFile()
+        {
+            _serviceInstallerFactory = s => new ServiceUnitServiceInstaller(s);
+
+            return this;
         }
     }
 }

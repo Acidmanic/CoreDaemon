@@ -34,14 +34,14 @@ namespace CoreDaemon.Playground
 
             Console.WriteLine("-----------------------------------------------");
 
-            if (Damien.Summon().ExecuteCommands(args) == ExecutionResult.NoActionTaken)
+            if (Damien.Summon().ExecuteCommands(new []{"daemon","help"}) == ExecutionResult.NoActionTaken)
             {
                 // Start sync (blocking) service here
 
-                while (true)
-                {
-                    Thread.Sleep(100);
-                }
+                // while (true)
+                // {
+                //     Thread.Sleep(100);
+                // }
             }
         }
     }

@@ -42,6 +42,8 @@ namespace CoreDaemon
 
                 if (callToDaemon == "daemon")
                 {
+                    _serviceProvider = new DotnetCoreWebAppServiceInfoProvider();
+                    
                     string command = args[1].ToLower();
 
                     if (command == "help")
@@ -51,14 +53,14 @@ namespace CoreDaemon
                         Console.WriteLine("help: Prints this.\n" +
                                           "install: will install a daemon on current system.\n" +
                                           "uninstall: will remove any installed service for this assembly from current system.\n\n" +
-                                          "* to writing service files into init.d directory, use 'init-rc' argument with install and uninstall commands." +
+                                          "* For writing service files into init.d directory, use 'init-rc' argument with install and uninstall commands." +
                                           "In a same way, using the 'unit' argument will force to install/uninstall regarding ServiceUnit" +
                                           " files (/etc/systemd/system/). If neither of these arguments are present, then the default " +
                                           "method: ("+defaultMethod+") will be used.");
                         return ExecutionResult.Handled;
                     }
 
-                    _serviceProvider = new DotnetCoreWebAppServiceInfoProvider();
+                    
                     _serviceInstallerFactory = info => CreateInstaller(args, info);
 
                     if (command == "install")

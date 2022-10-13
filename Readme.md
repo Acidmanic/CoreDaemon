@@ -55,7 +55,7 @@ The commands would be
  * daemon uninstall
  * daemon help
 
-Check if CoreDaemon Handeled the input commands
+Check if CoreDaemon Handled the input commands
 -------------------------
 
 Most probably you would prefer your service not being started when the binary is called by daemon arguments. For this you can simply check the result of calling the Damien execution:
@@ -77,6 +77,18 @@ You can specify the default way of creating/removing daemons by using ```Damien.
  /etc/init.d or using ```UseServiceUnitFile()``` to create service in /etc/systemd/system. This will be a default and can 
  be overridden when using the application (Next section).
  
+Logging
+=====
+
+You can use any implementation of Microsoft's ```ILogger``` by calling ```Damien.UseLogger(logger)```,
+ where logger is your ```ILogger``` instance. 
+
+```c#
+
+     var logger = new ConsoleLogger();
+
+     Damien.Summon().UseLogger(logger);
+```
 
 How daemon gets installed/uninstalled
 ==============

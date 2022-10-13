@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using CoreDaemon.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.LightWeight;
 
 namespace CoreDaemon.Playground
 {
@@ -11,29 +13,34 @@ namespace CoreDaemon.Playground
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
 
-            Console.WriteLine(Assembly.GetEntryAssembly()?.Location);
-            
-            Console.WriteLine(Assembly.GetEntryAssembly()?.CodeBase);
-            
-            Console.WriteLine(Process.GetCurrentProcess().MainModule?.FileName);
-            
-            Console.WriteLine(Assembly.GetEntryAssembly()?.FullName);
-            
-            Console.WriteLine(Assembly.GetEntryAssembly()?.EntryPoint?.Name);
+            var logger = new ConsoleLogger().EnableAll();
 
-            Console.WriteLine("-----------------------------------------------");
+            Damien.Summon().UseLogger(logger);
+            
+            logger.LogDebug("Hello World!");
+
+            logger.LogDebug(Assembly.GetEntryAssembly()?.Location);
+            
+            logger.LogDebug(Assembly.GetEntryAssembly()?.CodeBase);
+            
+            logger.LogDebug(Process.GetCurrentProcess().MainModule?.FileName);
+            
+            logger.LogDebug(Assembly.GetEntryAssembly()?.FullName);
+            
+            logger.LogDebug(Assembly.GetEntryAssembly()?.EntryPoint?.Name);
+
+            logger.LogDebug("-----------------------------------------------");
 
             ApplicationInfo info = Damien.Summon().GetApplicationInfo();
 
-            Console.WriteLine("ApplicationName: " + info.ApplicationName);
+            logger.LogDebug("ApplicationName: " + info.ApplicationName);
             
-            Console.WriteLine("BinaryDirectory: " + info.BinaryDirectory);
+            logger.LogDebug("BinaryDirectory: " + info.BinaryDirectory);
             
-            Console.WriteLine("ServiceName: " + info.ServiceName);
+            logger.LogDebug("ServiceName: " + info.ServiceName);
 
-            Console.WriteLine("-----------------------------------------------");
+            logger.LogDebug("-----------------------------------------------");
 
             if (Damien.Summon().ExecuteCommands(args) == ExecutionResult.NoActionTaken)
             {
@@ -54,7 +61,6 @@ namespace CoreDaemon.Playground
                     File.WriteAllText(path,content);
                     
                     Thread.Sleep(1000);
-                    
                     
                 }
             }

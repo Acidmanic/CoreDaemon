@@ -2,14 +2,17 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using CoreDaemon.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CoreDaemon
 {
     public class InitRcServiceInstaller : ServiceInstallerBase
     {
         private readonly string _scriptFileName;
-        public InitRcServiceInstaller(ServiceInfo serviceInfo) : base(serviceInfo)
+        private readonly ILogger _logger;
+        public InitRcServiceInstaller(ServiceInfo serviceInfo, ILogger logger) : base(serviceInfo,logger)
         {
+            _logger = logger;
             _scriptFileName = Path.Combine(new DirectoryInfo(".").Root.Name, "etc", "init.d", serviceInfo.Name);
         }
 

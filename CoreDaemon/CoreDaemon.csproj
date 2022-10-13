@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <Authors>Mani Moayedi</Authors>
         <Version>1.1.0</Version>
         <Company>Acidmanic</Company>
@@ -21,6 +21,10 @@
       <Content Include="..\Readme.md">
         <Link>Readme.md</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Acidmanic.MSLogging.LightWeight" Version="1.0.1" />
     </ItemGroup>
     
 </Project>

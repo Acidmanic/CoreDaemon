@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using CoreDaemon.Models;
@@ -34,14 +35,28 @@ namespace CoreDaemon.Playground
 
             Console.WriteLine("-----------------------------------------------");
 
-            if (Damien.Summon().ExecuteCommands(new []{"daemon","help"}) == ExecutionResult.NoActionTaken)
+            if (Damien.Summon().ExecuteCommands(args) == ExecutionResult.NoActionTaken)
             {
                 // Start sync (blocking) service here
 
-                // while (true)
-                // {
-                //     Thread.Sleep(100);
-                // }
+                while (true)
+                {
+                    var content =
+                        "Im Am Alive: " +
+                        DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt zz");
+
+                    var path = Path.Combine("/","var", "log", "daemon.example.log");
+
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                    File.WriteAllText(path,content);
+                    
+                    Thread.Sleep(1000);
+                    
+                    
+                }
             }
         }
     }
